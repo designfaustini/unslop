@@ -39,9 +39,13 @@
   }
 
   // Masked headline: split lines on <br>, each rises from behind its baseline.
+  // A decorative copy (aria-hidden, e.g. the second colour of a split headline) gets its lines as generated
+  // content, so neither screen readers nor the inspector read the words twice.
   for (const h of $$('[data-move="masked"]')) {
     const parts = h.innerHTML.split(/<br\s*\/?>/i);
-    h.innerHTML = parts.map((p, i) => `<span class="u-line"><span style="--i:${i}">${p.trim()}</span></span>`).join('');
+    const copy = h.closest('[aria-hidden="true"]');
+    const attr = (s) => s.replace(/<[^>]+>/g, '').trim().replace(/"/g, '&quot;');
+    h.innerHTML = parts.map((p, i) => (copy ? `<span class="u-line"><span style="--i:${i}" data-t="${attr(p)}"></span></span>` : `<span class="u-line"><span style="--i:${i}">${p.trim()}</span></span>`)).join('');
     if (!reduce) requestAnimationFrame(() => h.classList.add('u-go')); else h.classList.add('u-go');
   }
 

@@ -52,7 +52,7 @@ const argv = process.argv.slice(2);
 const cmd = argv.shift();
 const opt = (name, def) => { const i = argv.indexOf('--' + name); if (i === -1) return def; const v = argv[i + 1]; argv.splice(i, v === undefined || v.startsWith('--') ? 1 : 2); return v === undefined || v.startsWith('--') ? true : v; };
 const short = (s, n) => { s = String(s ?? '').replace(/\s+/g, ' ').trim(); return s.length > n ? s.slice(0, n - 1).trimEnd() + '…' : s; };
-const firstSentences = (s, n = 1) => (String(s || '').match(/[^.!?]+[.!?]+(\s|$)/g) || [String(s || '')]).slice(0, n).join('').trim();
+const firstSentences = (s, n = 1) => String(s || '').split(/(?<=[.!?])\s+(?=[A-Z0-9"“(])/).slice(0, n).join(' ').trim();
 const engine = (script, args, extra = {}) => spawnSync(process.execPath, [join(ENGINE, script), ...args], { encoding: 'utf8', maxBuffer: 64 * 1024 * 1024, ...extra });
 const engineAsync = (script, args) => new Promise((res) => {
   const p = spawn(process.execPath, [join(ENGINE, script), ...args], { stdio: ['ignore', 'pipe', 'pipe'] });
@@ -109,7 +109,7 @@ function tokensCss(d) {
   if (p) {
     L.push(`  --bg: ${p.bg}; --surface: ${p.surface}; --ink: ${p.ink}; --muted: ${p.muted};`);
     L.push(`  --accent: ${p.accent}; --accent-ink: ${p.accentInk || p.ink};`);
-    (p.fields || []).slice(0, 2).forEach((f, i) => L.push(`  --field-${i + 1}: ${f.bg}; --field-${i + 1}-ink: ${f.ink};`));
+    (p.fields || []).forEach((f, i) => L.push(`  --field-${i + 1}: ${f.bg}; --field-${i + 1}-ink: ${f.ink};`));
     if ((p.fields || []).length < 2) L.push(`  --field-2: var(--surface); --field-2-ink: var(--ink);`);
     if (!(p.fields || []).length) L.push(`  --field-1: var(--ink); --field-1-ink: var(--bg);`);
   } else {
@@ -191,7 +191,7 @@ function plan() {
     const d = readJson(join(WORK, 'direction.json'));
     if (!d) die('No plan yet. Run unslop plan --sector … --brief … first.');
     writeKit(d, site); saveState({ site });
-    console.log(card(d, r.stdout));
+    console.log(retarget(card(d, r.stdout)));
     console.log(`\nWROTE ${relative('.', join(site, 'unslop.css')) || 'unslop.css'} (tokens + kit) and unslop.js.`);
     return;
   }
@@ -214,7 +214,7 @@ function plan() {
   if (r.status) die(retarget(r.stderr || r.stdout));
   const d = readJson(join(WORK, 'direction.json'));
   writeKit(d, site); saveState({ site, round: 0 });
-  console.log(card(d, r.stdout));
+  console.log(retarget(card(d, r.stdout)));
   console.log(`\nWROTE ${relative('.', join(site, 'unslop.css')) || 'unslop.css'} (dealt tokens + neutral kit) and ${relative('.', join(site, 'unslop.js')) || 'unslop.js'} (motion). Put this in <head>, page-specific CSS in your own <style>:\n${headSnippet(d)}`);
   console.log('\nRedraw a slot only for a stated reason (brand constraint, missing asset, content that does not fit): unslop plan --redraw section:<role>.');
 }

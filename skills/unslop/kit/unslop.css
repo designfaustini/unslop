@@ -48,6 +48,9 @@ pre { margin: 0; padding: 1.1em 1.3em; overflow-x: auto; background: var(--surfa
 .surface { background: var(--surface); }
 .field-1 { background: var(--field-1); color: var(--field-1-ink); }
 .field-2 { background: var(--field-2); color: var(--field-2-ink); }
+.field-3 { background: var(--field-3, var(--surface)); color: var(--field-3-ink, var(--ink)); }
+.field-4 { background: var(--field-4, var(--ink)); color: var(--field-4-ink, var(--bg)); }
+.field-5 { background: var(--field-5, var(--bg)); color: var(--field-5-ink, var(--ink)); }
 .field-accent { background: var(--accent); color: var(--accent-ink); }
 
 /* Type steps: five at most on a page. */
@@ -88,6 +91,7 @@ html.js [data-reveal].in > * { opacity: 1; transform: none; }
 .u-line { display: block; overflow: hidden; padding-bottom: 0.06em; }
 .u-line > span { display: block; transform: translate3d(0, 110%, 0); transition: transform 900ms var(--ease-out); transition-delay: calc(var(--i, 0) * 110ms + 80ms); }
 .u-go .u-line > span { transform: none; }
+.u-line > [data-t]::before { content: attr(data-t); }
 html.js [data-move="shutter"] { clip-path: inset(0 100% 0 0); transition: clip-path 1100ms var(--ease-out); }
 html.js [data-move="shutter"] img { transform: scale(1.12); transition: transform 1400ms var(--ease-out); }
 html.js [data-move="shutter"].u-open { clip-path: inset(0 0 0 0); }

@@ -34,6 +34,14 @@ export function findChrome() {
     '/usr/bin/chromium-browser', '/snap/bin/chromium', '/usr/bin/microsoft-edge',
   ];
   for (const c of candidates) if (c && existsSync(c)) return c;
+  // Playwright's bundled Chromium (unslop: also used when no system browser is installed).
+  for (const base of [process.env.PLAYWRIGHT_BROWSERS_PATH, '/opt/pw-browsers', join(home, '.cache/ms-playwright'), join(home, 'Library/Caches/ms-playwright'), join(local, 'ms-playwright')]) {
+    try {
+      for (const d of readdirSync(base).filter((x) => /^chromium-\d+$/.test(x)).sort().reverse()) {
+        for (const exe of ['chrome-linux/chrome', 'chrome-mac/Chromium.app/Contents/MacOS/Chromium', 'chrome-win/chrome.exe']) if (existsSync(join(base, d, exe))) return join(base, d, exe);
+      }
+    } catch {}
+  }
   return null;
 }
 

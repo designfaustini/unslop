@@ -1,0 +1,372 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>unslop · sites sem cara de IA, em minutos</title>
+<meta name="description" content="unslop é uma skill para agentes de código que desenha páginas sem cara de IA: direção de arte sorteada de 247 sites premiados, fotos reais e um inspetor no navegador, em cerca de 10 minutos.">
+<meta property="og:title" content="unslop · sites sem cara de IA, em minutos">
+<meta property="og:description" content="Direção de arte, fotos reais e inspetor no navegador para agentes de código. Um terço do tempo e dos tokens.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chivo:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="unslop.css">
+<script>document.documentElement.classList.add('js')</script>
+<script src="unslop.js" defer></script>
+<script src="assets/directions.js" defer></script>
+<style>
+  :root { --step-display: clamp(3rem, 8.5vw, 9rem); --hs: clamp(64px, 13vw, 208px); --hh: max(100svh, 620px); }
+  .caps { text-transform: uppercase; }
+
+  /* Hero: two fields meet at half height; the seam cuts the second line of the headline. */
+  .hero { position: relative; height: var(--hh); overflow: hidden; background: var(--bg); }
+  .hero .low-field { position: absolute; left: 0; right: 0; bottom: 0; top: calc(var(--hh) / 2); background: var(--field-1); }
+  .hero-bar { position: relative; z-index: 3; }
+  .hero-bar .mark { font-weight: 900; font-size: var(--step-lead); letter-spacing: -0.04em; text-decoration: none; }
+  .hero-type { position: absolute; inset: 0; z-index: 2; padding-top: calc(var(--hh) / 2 - 1.38 * var(--hs)); text-align: center; pointer-events: none; }
+  .hero-type .hl { font-size: var(--hs); line-height: 0.86; margin: 0 auto; max-width: none; color: var(--accent); }
+  .hero-type.top { z-index: 3; clip-path: inset(0 0 calc(var(--hh) / 2) 0); }
+  .hero-type.low { clip-path: inset(calc(var(--hh) / 2) 0 0 0); }
+  .hero-type.low .hl { color: var(--ink); font-family: var(--font-display); font-weight: 900; letter-spacing: -0.05em; text-wrap: balance; }
+  .hero-sub { position: absolute; z-index: 3; left: 0; right: 0; bottom: 40px; margin: 0 auto; max-width: 46ch; padding-inline: var(--margin); text-align: center; color: var(--bg); font-size: var(--step-lead); line-height: 1.35; }
+
+  /* Intro: title, note, facts row. */
+  .intro { padding-block: 140px 120px; }
+  .intro h2 { grid-column: 1 / 7; font-weight: 300; font-size: var(--step-head); letter-spacing: -0.035em; line-height: 0.98; align-self: end; }
+  .intro .note { grid-column: 10 / 13; align-self: end; }
+  .facts { display: flex; justify-content: space-between; gap: 32px; margin-top: 120px; list-style: none; }
+  .facts b { display: block; font-weight: 300; font-size: var(--step-head); letter-spacing: -0.03em; line-height: 1; }
+  .facts li > span { display: block; margin-top: 10px; font-size: var(--step-small); max-width: 22ch; opacity: 0.86; }
+
+  /* How it works: call and response. */
+  .how .col { grid-column: 4 / 10; }
+  .how h2 { font-size: var(--step-lead); letter-spacing: -0.02em; margin-bottom: 56px; }
+  .ex + .ex { margin-top: 88px; }
+  .ex > p { font-size: var(--step-lead); font-weight: 500; margin-bottom: 16px; }
+  .call { position: relative; }
+  .call pre { background: var(--surface); padding: 20px 96px 20px 20px; font-size: var(--step-small); white-space: pre-wrap; word-break: break-word; }
+  .copy { position: absolute; top: 12px; right: 12px; min-height: 36px; padding: 0.4em 0.9em; font-size: var(--step-small); }
+  .resp { margin: 24px 0 0 56px; padding: 20px 24px; background: var(--ink); color: var(--bg); font-size: var(--step-small); line-height: 1.55; }
+  .resp p { margin: 0 0 0.5em; }
+  .resp .ok { color: var(--field-3); font-weight: 700; }
+  .resp ul { list-style: none; }
+  .resp li + li { margin-top: 8px; }
+  .resp.wide { margin-left: 56px; width: min(760px, calc(100vw - 2 * var(--margin))); }
+  .resp.wide pre { background: transparent; color: inherit; padding: 0; white-space: pre-wrap; font-size: 1em; }
+  .resp figure { margin-top: 20px; }
+  .resp figcaption { color: var(--bg); }
+
+  /* Live dealer: the headline is an input. */
+  .deal { min-height: 88svh; display: flex; flex-direction: column; justify-content: center; }
+  .deal input { width: 100%; border: 0; padding: 0; background: transparent; color: inherit; font: inherit; font-weight: 900; font-size: var(--step-display); letter-spacing: -0.05em; line-height: 1.05; caret-color: var(--field-3); outline-offset: 8px; }
+  .deal input::placeholder { color: inherit; opacity: 0.5; }
+  .deal h2 { margin-top: 40px; font-size: var(--step-lead); font-weight: 500; letter-spacing: -0.01em; line-height: 1.3; max-width: 34ch; }
+  .answer { margin-top: 20px; max-width: 760px; list-style: none; }
+  .answer li { padding: 16px 20px; background: var(--field-2); }
+  .answer li + li { margin-top: 8px; }
+  .answer b { display: block; }
+  .answer span { display: block; line-height: 1.45; }
+  .answer .sector { margin-top: 0; padding: 0; background: none; }
+  .tries { display: flex; flex-wrap: wrap; gap: 8px 28px; margin-top: 36px; }
+  .tries button { border: 0; padding: 0; background: none; color: inherit; font: inherit; text-decoration: underline; text-decoration-thickness: 0.07em; text-underline-offset: 0.25em; cursor: pointer; }
+  .tries button:hover { text-decoration-color: var(--field-3); }
+
+  /* Stats: a total and its receipt. */
+  .stats .grid { align-items: stretch; }
+  .stats .left .total { margin: 0 0 20px; }
+  .slip { align-self: start; }
+  .stats .left { grid-column: 1 / 7; display: flex; flex-direction: column; justify-content: space-between; gap: 64px; }
+  .stats h2 { font-size: var(--step-head); letter-spacing: -0.03em; line-height: 1; }
+  .stats .left .total { font-weight: 900; font-size: var(--hs); line-height: 0.8; letter-spacing: -0.06em; }
+  .slip { grid-column: 8 / 12; background: var(--bg); color: var(--ink); padding: 32px 28px 48px; font-size: var(--step-small); clip-path: polygon(0 0, 100% 0, 100% calc(100% - 12px), 95% 100%, 90% calc(100% - 12px), 85% 100%, 80% calc(100% - 12px), 75% 100%, 70% calc(100% - 12px), 65% 100%, 60% calc(100% - 12px), 55% 100%, 50% calc(100% - 12px), 45% 100%, 40% calc(100% - 12px), 35% 100%, 30% calc(100% - 12px), 25% 100%, 20% calc(100% - 12px), 15% 100%, 10% calc(100% - 12px), 5% 100%, 0 calc(100% - 12px)); }
+  .slip h3 { font-size: 1em; font-weight: 700; letter-spacing: 0; margin: 20px 0 6px; }
+  .slip h3:first-child { margin-top: 0; }
+  .slip dl { margin: 0; }
+  .slip .row { display: flex; align-items: baseline; gap: 8px; padding-block: 3px; }
+  .slip dt { flex: none; }
+  .slip .row::after { content: ""; order: 1; flex: 1; border-bottom: 3px dotted currentColor; transform: translateY(-4px); opacity: 0.7; }
+  .slip dd { order: 2; margin: 0; font-variant-numeric: tabular-nums; }
+  .slip .sum { margin-top: 18px; padding: 10px 12px; background: var(--ink); color: var(--bg); font-weight: 700; }
+  .slip .sum::after { display: none; }
+  .slip .sum dd { margin-left: auto; }
+
+  /* FAQ: wide heading, indented questions. */
+  .faq h2 { font-size: var(--step-head); letter-spacing: -0.045em; }
+  .qs { grid-column: 5 / 13; margin-top: 80px; }
+  .qs details { padding: 0 24px; margin-inline: -24px; transition: background-color 240ms var(--ease-out); }
+  .qs details + details { margin-top: 12px; }
+  .qs details[open] { background: var(--surface); padding-block: 4px 24px; }
+  .qs summary { display: flex; justify-content: space-between; align-items: center; gap: 24px; padding-block: 12px; font-size: var(--step-lead); cursor: pointer; list-style: none; }
+  .qs summary::-webkit-details-marker { display: none; }
+  .qs summary::after { content: ""; flex: none; width: 10px; height: 10px; border-right: 2px solid currentColor; border-bottom: 2px solid currentColor; transform: translateY(-3px) rotate(45deg); transition: transform 240ms var(--ease-out); } /* taste-skill-ignore: chevron strokes */
+  .qs details[open] summary::after { transform: translateY(2px) rotate(225deg); }
+  .qs details p { max-width: 48ch; }
+
+  /* Close: the page inverted. */
+  .close { background: var(--ink); color: var(--bg); min-height: 90svh; display: flex; flex-direction: column; justify-content: space-between; padding-block: 120px 40px; }
+  .close h2 { font-size: var(--step-display); line-height: 0.9; }
+  .close .base { display: flex; justify-content: space-between; align-items: end; gap: 32px; margin-top: 120px; }
+  .close .base p { font-size: var(--step-lead); max-width: 36ch; }
+  .foot { background: var(--ink); color: var(--bg); padding-block: 120px 32px; }
+  .band { padding-block: var(--section-y) 0; }
+  .band h2 { font-size: var(--step-head); margin-bottom: 40px; }
+  .band .pair { display: grid; grid-template-columns: 1fr 1fr; gap: var(--col-gap); padding-inline: var(--margin); max-width: var(--max); margin-inline: auto; }
+  .band figure { overflow: hidden; }
+  .band figure img { width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; object-position: top left; }
+  .band figcaption { padding: 16px 0 0; }
+  .band .after { padding-bottom: var(--section-y); }
+  .foot .name { font-weight: 900; font-size: 26vw; line-height: 0.78; letter-spacing: -0.07em; margin: 0 0 32px -0.04em; }
+  .foot .credits { opacity: 0.9; }
+
+  @media (max-width: 900px) {
+    .band .pair { grid-template-columns: 1fr; }
+    .intro h2, .intro .note, .how .col, .stats .left, .slip, .qs { grid-column: 1 / -1; }
+    .intro .note { margin-top: 20px; }
+    .facts { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin-top: 64px; }
+    .resp, .resp.wide { margin-left: 0; width: auto; }
+    .stats .left { gap: 32px; }
+    .stats .left .total { font-size: 40vw; }
+    .slip { margin-top: 48px; }
+    .qs { margin-top: 48px; }
+  }
+  @media (max-width: 600px) {
+    :root { --hs: 15.5vw; --hh: max(100svh, 560px); }
+    .hero .low-field { top: calc(var(--hh) * 0.46); }
+    .hero-type { padding-top: calc(var(--hh) * 0.46 - 1.38 * var(--hs)); }
+    .hero-type.top { z-index: 3; clip-path: inset(0 0 calc(var(--hh) * 0.54) 0); }
+    .hero-type.low { clip-path: inset(calc(var(--hh) * 0.46) 0 0 0); }
+    .hero-sub { text-align: left; font-size: var(--step-body); margin: 0; }
+    .hero-bar .btn { min-height: 44px; padding: 0.6em 1em; }
+    .facts b { font-size: var(--step-lead); }
+    .intro { padding-block: 96px 88px; }
+    .deal input { font-size: 11vw; }
+    .close { min-height: 80svh; }
+    .close h2 { font-size: 11vw; }
+    .close .base { flex-direction: column; align-items: stretch; }
+    .close .btn { width: 100%; }
+  }
+</style>
+</head>
+<body>
+<main>
+  <section class="hero" aria-labelledby="titulo">
+    <div class="low-field" aria-hidden="true"></div>
+    <header class="hero-bar wrap bar">
+      <a class="mark" href="#">unslop</a>
+      <a class="btn" href="#instalar">Instalar a skill</a>
+    </header>
+    <div class="hero-type top"><h1 id="titulo" class="hl caps" data-move="masked">Sem cara<br>de IA</h1></div>
+    <div class="hero-type low" aria-hidden="true"><div class="hl caps" data-move="masked">Sem cara<br>de IA</div></div>
+    <p class="hero-sub">unslop é uma skill para agentes de código que desenha páginas de verdade: direção de arte, fotos reais e um inspetor no navegador, em cerca de dez minutos.</p>
+  </section>
+
+  <section class="intro field-2" id="sobre">
+    <div class="wrap">
+      <div class="grid">
+        <h2>Decisões no lugar da média</h2>
+        <p class="note">Uma página feita por IA costuma ser a média de todas que ela já viu. A unslop sorteia uma direção de arte real, o agente escolhe a que serve ao cliente e o inspetor confere tudo num navegador de verdade.</p>
+      </div>
+      <ul class="facts">
+        <li><b><span class="num">247</span> sites</b><span>estudados no One Page Love e no Awwwards</span></li>
+        <li><b><span class="num">20</span> direções</b><span>de arte, cada uma com tipo, paleta e blocos</span></li>
+        <li><b><span class="num">3</span> comandos</b><span>plan, images e check fazem a corrida inteira</span></li>
+        <li><b><span class="num">2</span> prints</b><span>por rodada de revisão, em vez de seis a vinte screenshots</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="how section" id="instalar">
+    <div class="wrap grid">
+      <div class="col">
+        <h2>Como funciona</h2>
+        <div class="ex">
+          <p>Primeiro, instale a skill.</p>
+          <div class="call"><pre><code>npx skills add https://github.com/designfaustini/unslop --skill unslop</code></pre><button class="btn ink copy" type="button">Copiar</button></div>
+          <div class="resp" data-ui>
+            <p class="ok">Pronto. A skill fica em .claude/skills/unslop:</p>
+            <ul>
+              <li>SKILL.md e RULES.md, a corrida e as regras, em 20 KB</li>
+              <li>scripts/unslop.mjs, os comandos plan, images, keep e check</li>
+              <li>library/, as 20 direções e os blocos dos 247 sites</li>
+              <li>kit/, os tokens e o movimento prontos para a página</li>
+            </ul>
+          </div>
+        </div>
+        <div class="ex">
+          <p>Depois, peça uma página com o que o cliente tem de único.</p>
+          <div class="call"><pre><code>Use a skill unslop e faça a página da Padaria Sete Portas, na Rua das Sete Portas, em Lisboa. O forno acende às cinco.</code></pre><button class="btn ink copy" type="button">Copiar</button></div>
+          <div class="resp" data-ui>
+            <p class="ok">unslop plan · três direções para este briefing</p>
+            <ul>
+              <li><b>uneven-photographs</b> · Photographs at uneven sizes, placed like prints on a gallery wall.</li>
+              <li><b>place-carries-it</b> · The place carries it: one full-bleed image of where you would be standing.</li>
+              <li><b>dark-room</b> · One dark field from top to bottom, and in it, lit things.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="ex">
+          <p>No fim, ele confere a página num navegador de verdade.</p>
+          <div class="call"><pre><code>node .claude/skills/unslop/scripts/unslop.mjs check docs/index.html</code></pre><button class="btn ink copy" type="button">Copiar</button></div>
+          <div class="resp wide" data-ui>
+            <pre><code>UNSLOP CHECK · docs/index.html · round 1 · widths 1440,390
+FAIL [few-pictures] Only 2 picture(s) on the page.
+FAIL [covered-text] Large text lies under another element.
+FAIL [headline-lines] 2 headline(s) wrap past two lines at 390px.
+FAIL [eyebrow] 1 eyebrow/kicker label(s) above headings.
+LOOK: .unslop/look-1.jpg (first screens) · .unslop/look-2.jpg (whole page)
+RESULT: 4 FAIL, 2 WARN · round 1</code></pre>
+            <figure><img src="assets/img/rodada-1-primeira-tela.jpg" width="1460" height="744" loading="lazy" alt="look-1.jpg da rodada 1: a primeira tela desta página no desktop e no celular, lado a lado"><figcaption>look-1.jpg, a primeira folha que o agente abriu na rodada 1</figcaption></figure>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band field-2" id="rodada">
+    <div class="wrap"><h2>Esta página, rodada 1 e rodada 2</h2></div>
+    <div class="pair after">
+      <figure><img src="assets/img/rodada-1-pagina.jpg" width="1500" height="1359" loading="lazy" alt="look-2.jpg da rodada 1: a página inteira, tela por tela, com o total minúsculo e quatro falhas"><figcaption>Rodada 1: quatro FAIL. Na folha dava para ver o total minúsculo, os números dos fatos sumidos e 16 tamanhos de fonte.</figcaption></figure>
+      <figure><img src="assets/img/rodada-2-pagina.jpg" width="1500" height="1204" loading="lazy" data-drift alt="look-2.jpg da rodada 2: a mesma página com o total grande, as fotos da construção e zero falhas"><figcaption>Rodada 2: zero FAIL depois de um lote de edições pontuais. A folha mostrou o que ainda faltava acertar antes da versão final.</figcaption></figure>
+    </div>
+  </section>
+
+  <section class="deal field-1" id="teste" data-still>
+    <div class="wrap">
+      <label class="sr-only" for="brief">Briefing</label>
+      <input id="brief" data-ui type="text" value="padaria em lisboa" autocomplete="off" spellcheck="false">
+      <h2>Escreva um briefing: a biblioteca sorteia três direções para ele</h2>
+      <ul class="answer" data-ui aria-live="polite">
+        <li><b>The name as a monument</b><span>The name is the headline.</span></li>
+        <li><b>The place carries it</b><span>For a place, the photograph is the argument.</span></li>
+        <li><b>The page is the object</b><span>Find the printed or physical artefact that already exists in the subject's world and build the page as that thing.</span></li>
+      </ul>
+      <div class="tries" aria-label="Exemplos">
+        <button type="button">estúdio de arquitetura</button>
+        <button type="button">app de finanças pessoais</button>
+        <button type="button">festival de música</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="stats section field-3" id="custo">
+    <div class="wrap grid">
+      <div class="left">
+        <div>
+          <h2>Quanto custou este site</h2>
+          <p>Contamos cada chamada de ferramenta que o agente fez para construir esta página com a própria unslop, do briefing ao 0 FAIL.</p>
+        </div>
+        <div>
+          <p class="total num">20</p>
+          <p>chamadas de ferramenta em 9 minutos, com quatro rodadas de check. A Taste Skill original leva de 30 a 45 minutos por página, segundo o próprio README.</p>
+        </div>
+      </div>
+      <div class="slip" data-ui>
+        <h3>Planejar</h3>
+        <dl>
+          <div class="row"><dt>Três direções</dt><dd>1</dd></div>
+          <div class="row"><dt>Direção escolhida e kit</dt><dd>1</dd></div>
+          <div class="row"><dt>Seção redesenhada</dt><dd>1</dd></div>
+        </dl>
+        <h3>Construir</h3>
+        <dl>
+          <div class="row"><dt>Biblioteca para o teste ao vivo</dt><dd>1</dd></div>
+          <div class="row"><dt>Página escrita de uma vez</dt><dd>1</dd></div>
+          <div class="row"><dt>Ajuste antes do primeiro check</dt><dd>1</dd></div>
+        </dl>
+        <h3>Conferir</h3>
+        <dl>
+          <div class="row"><dt>Rodadas de check</dt><dd>4</dd></div>
+          <div class="row"><dt>Folhas de look abertas</dt><dd>6</dd></div>
+          <div class="row"><dt>Lotes de edições pontuais</dt><dd>4</dd></div>
+        </dl>
+        <dl><div class="row sum"><dt>Total</dt><dd>20</dd></div></dl>
+      </div>
+    </div>
+  </section>
+
+  <section class="faq section" id="perguntas">
+    <div class="wrap grid">
+      <h2 style="grid-column: 1 / -1">Perguntas diretas</h2>
+      <div class="qs">
+        <details>
+          <summary>Preciso ter a Taste Skill instalada?</summary>
+          <p>Não. A unslop traz embutido o motor da Taste Skill de Leonxlnx (licença MIT, com crédito): a biblioteca dos 247 sites, o inspetor no navegador e a busca de imagens em acervos abertos.</p>
+        </details>
+        <details>
+          <summary>Por que ela gasta menos tempo e menos tokens?</summary>
+          <p>O agente lê 20 KB de instruções em vez de mais de 300 KB, abre uma folha de contato em vez de dezenas de fotos e screenshots, recebe tokens e movimento prontos, escreve a página uma vez e corrige com edições pontuais.</p>
+        </details>
+        <details>
+          <summary>Funciona com React, Next.js ou Astro?</summary>
+          <p>Sim. O plano e as regras valem para qualquer stack, e o check aceita um arquivo ou uma URL local, então basta apontar para o servidor de desenvolvimento.</p>
+        </details>
+        <details>
+          <summary>De onde vêm as fotos?</summary>
+          <p>De acervos abertos: Openverse, Wikimedia Commons, Art Institute of Chicago e o Met, só com licenças que permitem uso comercial. Cada foto baixada guarda título, autor e licença, e o crédito vai no rodapé.</p>
+        </details>
+        <details>
+          <summary>E se a máquina não tiver internet?</summary>
+          <p>A skill desenha em SVG o que não encontrou, numa linguagem só e nas cores da paleta, e avisa no relatório que os acervos não puderam ser consultados.</p>
+        </details>
+        <details>
+          <summary>O que ela não faz?</summary>
+          <p>Não inventa depoimentos, clientes, números ou logos. Não usa degradê, etiqueta acima do título, cards com ícone nem fonte monoespaçada fora de código. E não chama uma página de pronta sem abrir os prints.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <section class="close" id="fim">
+    <div class="wrap">
+      <h2 class="caps">Menos média,<br>mais decisão</h2>
+    </div>
+    <div class="wrap base">
+      <p>Instale em um minuto e peça a próxima página com o que só o seu cliente tem.</p>
+      <a class="btn" href="#instalar">Instalar a skill</a>
+    </div>
+  </section>
+</main>
+<footer class="foot">
+  <div class="wrap">
+    <p class="name" aria-hidden="true">unslop</p>
+    <p class="credits">unslop, por <a href="https://github.com/designfaustini">Design Faustini</a>. Motor, biblioteca e inspetor derivados da <a href="https://github.com/Leonxlnx/taste-skill">Taste Skill</a> de Leonxlnx, licença MIT. Código em <a href="https://github.com/designfaustini/unslop">github.com/designfaustini/unslop</a>.</p>
+  </div>
+</footer>
+<script>
+  // Copy buttons.
+  for (const b of document.querySelectorAll('.copy')) b.addEventListener('click', async () => {
+    const text = b.parentElement.querySelector('code').textContent;
+    try { await navigator.clipboard.writeText(text); b.textContent = 'Copiado'; } catch { b.textContent = 'Selecione e copie'; }
+    setTimeout(() => (b.textContent = 'Copiar'), 1600);
+  });
+  // Live dealer: a brief in, three directions out, from the real library.
+  addEventListener('DOMContentLoaded', () => {
+    const D = window.DIRECTIONS || []; if (!D.length) return;
+    const input = document.getElementById('brief'); const out = document.querySelector('.answer');
+    const SECTORS = [
+      [/padaria|caf[eé]|restaurante|bar\b|pizzaria|confeitaria|bistr/, 'restaurant'], [/hotel|pousada|hostel|resort/, 'hospitality'],
+      [/arquitet|interiores/, 'architecture'], [/festival|show|evento|congresso|confer[eê]ncia|casamento/, 'event'],
+      [/m[uú]sica|banda|disco|dj\b/, 'music'], [/finan|banco|invest|cr[eé]dito|fintech/, 'finance'],
+      [/app\b|aplicativo/, 'consumer-app'], [/software|saas|plataforma|sistema/, 'saas'], [/api|desenvolvedor|dev\b|c[oó]digo/, 'dev-tool'],
+      [/\bia\b|intelig[eê]ncia artificial|agente/, 'ai-product'], [/loja|e-?commerce|moda|roupa/, 'ecommerce'],
+      [/ag[eê]ncia/, 'agency'], [/est[uú]dio|portf[oó]lio|fot[oó]graf/, 'studio-portfolio'], [/im[oó]ve|imobili/, 'real-estate'],
+      [/cl[ií]nica|sa[uú]de|m[eé]dic|dent|psic/, 'health'], [/curso|escola|educa/, 'education'], [/ong\b|instituto|causa/, 'nonprofit'],
+      [/museu|galeria|teatro|cultura|livro/, 'culture'], [/produto|cadeira|m[oó]vel|cer[aâ]mica/, 'physical-product'],
+    ];
+    const NAMES = { restaurant: 'restaurante', hospitality: 'hospedagem', architecture: 'arquitetura', event: 'evento', music: 'música', finance: 'finanças', 'consumer-app': 'app', saas: 'software', 'dev-tool': 'ferramenta de dev', 'ai-product': 'produto de IA', ecommerce: 'loja', agency: 'agência', 'studio-portfolio': 'estúdio', 'real-estate': 'imóveis', health: 'saúde', education: 'educação', nonprofit: 'causa', culture: 'cultura', 'physical-product': 'produto', other: 'outro' };
+    const hash = (s) => { let h = 2166136261; for (const c of s) { h ^= c.charCodeAt(0); h = Math.imul(h, 16777619); } return h >>> 0; };
+    const esc = (s) => s.replace(/[&<>]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]));
+    const deal = () => {
+      const brief = input.value.toLowerCase().trim();
+      const sector = (SECTORS.find(([re]) => re.test(brief)) || [0, 'other'])[1];
+      let pool = D.filter((d) => d.sectors.includes(sector)); if (pool.length < 3) pool = D.slice();
+      let h = hash(brief || 'unslop'); const picks = [];
+      while (picks.length < 3 && pool.length) { h = Math.imul(h ^ (h >>> 15), 2246822507) >>> 0; picks.push(pool.splice(h % pool.length, 1)[0]); }
+      out.innerHTML = `<li class="sector">setor lido: ${NAMES[sector]}</li>` + picks.map((d) => `<li><b>${esc(d.name)}</b><span>${esc(d.idea)} First screen: ${esc(d.first)}</span></li>`).join('');
+    };
+    let t; input.addEventListener('input', () => { clearTimeout(t); t = setTimeout(deal, 160); });
+    for (const b of document.querySelectorAll('.tries button')) b.addEventListener('click', () => { input.value = b.textContent; deal(); input.focus(); });
+    deal();
+  });
+</script>
+</body>
+</html>
