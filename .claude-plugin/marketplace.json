@@ -1,0 +1,19 @@
+{
+  "name": "unslop",
+  "description": "unslop: fast anti-slop art direction for coding agents. Researched directions, real pictures and a real-browser inspector, on a token budget.",
+  "owner": { "name": "Design Faustini", "url": "https://github.com/designfaustini" },
+  "plugins": [
+    {
+      "name": "unslop",
+      "description": "Build web pages that do not look AI-made in about a third of the time and tokens: deal a direction, get a tokens and motion kit, find real pictures on one contact sheet, check in a real browser with two look sheets.",
+      "version": "1.0.0",
+      "source": "./",
+      "skills": ["./skills/unslop"],
+      "author": { "name": "Design Faustini", "url": "https://github.com/designfaustini" },
+      "homepage": "https://designfaustini.github.io/unslop/",
+      "repository": "https://github.com/designfaustini/unslop",
+      "license": "MIT",
+      "keywords": ["skills", "frontend", "design", "landing-page", "anti-slop", "taste"]
+    }
+  ]
+}
