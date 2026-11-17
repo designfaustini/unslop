@@ -19,7 +19,7 @@ import { spawn, spawnSync } from 'node:child_process';
 import { existsSync, mkdirSync, readFileSync, writeFileSync, readdirSync, copyFileSync, statSync, createReadStream } from 'node:fs';
 import { createServer } from 'node:http';
 import { dirname, join, resolve, relative, extname, basename, sep } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 import { homedir } from 'node:os';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -221,7 +221,7 @@ function plan() {
 
 // ── a tiny static server + browser, for contact sheets ──────────────────────────────────────────────
 async function withBrowser(fn) {
-  const { Browser } = await import(join(ENGINE, 'lib', 'cdp.mjs'));
+  const { Browser } = await import(pathToFileURL(join(ENGINE, 'lib', 'cdp.mjs')).href);
   const browser = await Browser.launch();
   try { return await fn(browser); } finally { await browser.close(); }
 }

@@ -18,6 +18,8 @@
 
 **Sites sem cara de IA, em minutos.** unslop é uma skill para agentes de código (Claude Code, Codex, Cursor e afins) que dá direção de arte, fotos reais e um inspetor no navegador para qualquer landing page, site institucional, portfólio ou página de produto.
 
+<p align="center"><img src="assets/demo.gif" alt="Corrida real: rodada 1 com 4 FAIL, rodada 2 com 0 FAIL" width="80%"></p>
+
 É uma versão otimizada da [Taste Skill](https://github.com/Leonxlnx/taste-skill) de Leonxlnx. Mesma biblioteca de 247 sites premiados, mesmo inspetor rigoroso, só que com um fluxo pensado para gastar muito menos tempo e tokens.
 
 > O site acima foi construído pela própria unslop, do briefing ao 0 FAIL, em **9 minutos e 20 chamadas de ferramenta**. A Taste Skill original declara de 30 a 45 minutos e algumas centenas de milhares de tokens por página.

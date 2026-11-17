@@ -18,6 +18,8 @@
 
 **Websites that don't look AI-made, in minutes.** unslop is a skill for coding agents (Claude Code, Codex, Cursor and friends) that gives any landing page, company site, portfolio or product page real art direction, real photos and a real-browser inspector.
 
+<p align="center"><img src="assets/demo.gif" alt="Real run: round 1 with 4 FAIL, round 2 with 0 FAIL" width="80%"></p>
+
 It is a leaner version of Leonxlnx's [Taste Skill](https://github.com/Leonxlnx/taste-skill): the same library of 247 award-winning sites and the same strict inspector, with a workflow built to spend far less time and fewer tokens.
 
 > The site linked above was built by unslop itself, from brief to 0 FAIL, in **9 minutes and 20 tool calls** (a single measured run, see [Measurements](#measurements)). Taste Skill's own README states 30 to 45 minutes per page.
